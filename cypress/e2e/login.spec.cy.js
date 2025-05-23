@@ -1,17 +1,29 @@
+import userData from "../fixtures/jinhu.json"
+
+
 describe('Orange HRM Tests', () => {
+
+  const selectorslist = {
+    usernameField: "[name='username']",
+    passwordField: "[name='password']",
+    loginButton: "[type='submit']",
+    dashboardGrid: ".orangehrm-dashboard-grid",
+    wrongCredentialAlert: "[role='alert']"
+  }
+
   it('Login - Sucess', () => {
-    cy.visit('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
-    cy.get(':nth-child(2) > .oxd-input-group > :nth-child(2) > .oxd-input').type('Admin')
-    cy.get(':nth-child(3) > .oxd-input-group > :nth-child(2) > .oxd-input').type('admin123')
-    cy.get('.oxd-button').click()
+    cy.visit('/auth/login')
+    cy.get(selectorslist.usernameField).type(userData.loginSuccess.username)
+    cy.get(selectorslist.passwordField).type(userData.loginSuccess.password)
+    cy.get(selectorslist.loginButton).click()
     cy.location('pathname').should('equal','/web/index.php/dashboard/index')
-    cy.get(".oxd-topbar-header-breadcrumb").contains('Dashboard')
+    cy.get(selectorslist.dashboardGrid)
   })
    it('Login - Fail', () => {
-    cy.visit('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
-    cy.get(':nth-child(2) > .oxd-input-group > :nth-child(2) > .oxd-input').type('test')
-    cy.get(':nth-child(3) > .oxd-input-group > :nth-child(2) > .oxd-input').type('test')
-    cy.get('.oxd-button').click()
-    cy.get('.oxd-alert')
+    cy.visit('/auth/login')
+    cy.get(selectorslist.usernameField).type(userData.loginFail.username)
+    cy.get(selectorslist.passwordField).type(userData.loginFail.password)
+    cy.get(selectorslist.loginButton).click()
+    cy.get(selectorslist.wrongCredentialAlert)
   })
 })
